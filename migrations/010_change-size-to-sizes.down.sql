@@ -1,0 +1,2 @@
+ALTER TABLE products ADD COLUMN size VARCHAR(20);
+ALTER TABLE products DROP COLUMN sizes;

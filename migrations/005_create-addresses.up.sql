@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS addresses (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type VARCHAR(20) NOT NULL DEFAULT 'shipping' CHECK (type IN ('shipping', 'billing')),
+  full_name VARCHAR(255) NOT NULL,
+  phone VARCHAR(30),
+  street VARCHAR(255) NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  state VARCHAR(100) NOT NULL,
+  zip VARCHAR(20) NOT NULL,
+  country VARCHAR(100) NOT NULL DEFAULT 'United States',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TRIGGER IF EXISTS set_updated_at ON addresses;
+CREATE TRIGGER set_updated_at
+  BEFORE UPDATE ON addresses
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
